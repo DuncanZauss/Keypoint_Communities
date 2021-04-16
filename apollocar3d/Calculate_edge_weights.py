@@ -1,0 +1,29 @@
+from constants import CAR_SKELETON as skel, CAR_KEYPOINTS
+import numpy as np
+import json
+import time
+
+### calculate average dist ###
+num = len(CAR_KEYPOINTS)
+data_path = "./apollo_keypoints_66_train.json"
+with open(data_path, 'r') as f:
+        data = json.load(f)
+skel = [(bone[0]-1, bone[1]-1) for bone in skel]
+distance = np.zeros((len(skel)), dtype=np.float64)
+no_instance = np.zeros((len(skel)), dtype=np.int)
+start = time.time()
+for ann in data["annotations"]:
+    kp = np.array(ann["keypoints"])
+    if len(kp.flatten()) == num*3:
+        visible_kps = np.where(kp[2::3]>0)[0]
+        kp = kp.reshape((num,3))
+        for bone_id, bone in enumerate(skel):
+            if bone[0] in visible_kps and bone[1] in visible_kps:
+                no_instance[bone_id] += 1
+                distance[bone_id] += np.linalg.norm(kp[bone[0],:2]-kp[bone[1],:2])
+normalized_dist = distance / no_instance
+with open("Edge_weights_train_apollocar.json", 'w') as f:
+            json.dump(normalized_dist.tolist(), f)
+for i in range(len(normalized_dist)):
+    print(skel[i], normalized_dist[i])
+print("Processing took {:.2f} seconds".format(time.time()-start))
