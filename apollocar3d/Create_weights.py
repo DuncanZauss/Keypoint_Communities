@@ -61,6 +61,7 @@ LOG = logging.getLogger(__name__)
 #     draw_ann(ann, filename='./'+prefix+'_skeleton_wholebody.png', keypoint_painter=keypoint_painter)
 # =============================================================================
 
+
 def get_normalized_weights(centrality_measure):
     l = []
     for i in range(len(kps)):
@@ -69,10 +70,12 @@ def get_normalized_weights(centrality_measure):
     w = w/np.sum(w) * len(kps)
     return w
 
+
 def inverse_normalize(weights):
     w = 1/weights
     w = w/np.sum(w) * len(kps)
     return w.tolist()
+
 
 def harmonic_centrality_local_radius(G_w, radius, distance="euclidean_dist"):
     weights = []
@@ -83,6 +86,7 @@ def harmonic_centrality_local_radius(G_w, radius, distance="euclidean_dist"):
     w = np.array(weights)
     w = w/np.sum(w) * len(kps)
     return w
+
 
 def draw_ann(ann, *, keypoint_painter, filename=None, margin=0.5, aspect=None, **kwargs):
     from openpifpaf import show  # pylint: disable=import-outside-toplevel
@@ -99,11 +103,8 @@ def draw_ann(ann, *, keypoint_painter, filename=None, margin=0.5, aspect=None, *
         ax.set_axis_off()
         ax.set_xlim(*xlim)
         ax.set_ylim(*ylim)
-        
-
         if aspect is not None:
             ax.set_aspect(aspect)
-
         keypoint_painter.annotation(ax, ann)
 
 def draw_skeletons(pose, weights, prefix=""):
@@ -151,7 +152,6 @@ class KeypointPainter(Configurable):
     marker_size = None
     solid_threshold = 0.5
     font_size = 8
-    
 
     def __init__(self, *,
                  xy_scale=1.0,
@@ -187,8 +187,8 @@ class KeypointPainter(Configurable):
         if skeleton_mask is None:
             skeleton_mask = [True for _ in skeleton]
         assert len(skeleton) == len(skeleton_mask)
-        
-        
+
+
         # connections
         lines, line_colors, line_styles = [], [], []
        
@@ -204,7 +204,7 @@ class KeypointPainter(Configurable):
                     line_styles.append('solid')
                 else:
                     line_styles.append((0, (1, 3)))
-        
+
         ax.add_collection(matplotlib.collections.LineCollection(
             lines, colors=line_colors,
             linewidths=kwargs.get('linewidth', self.line_width),
@@ -223,7 +223,7 @@ class KeypointPainter(Configurable):
 #             alpha=alpha,
 #         )
 # =============================================================================
-  
+
 
     @staticmethod
     def _draw_scales(ax, xs, ys, vs, colors, scales, alpha=1.0):
@@ -258,7 +258,7 @@ class KeypointPainter(Configurable):
         v = kps[:, 2]
 
         skeleton_mask = None
-        
+
         normalized_scales = list(ann.joint_scales/np.sum(ann.joint_scales)*len(ann.joint_scales))
         caf_weights = []
         for bone in ann.skeleton:
@@ -269,21 +269,19 @@ class KeypointPainter(Configurable):
         max_w, min_w = max(caf_weights + normalized_scales), min(caf_weights + normalized_scales)
         min_w = math.floor(min_w*2)/2
         max_w = math.ceil(max_w)
-        
+
         fac_col = 255/(max_w - min_w)
         color_map = matplotlib.cm.get_cmap('viridis_r')
         colors = []
-        
         self._draw_skeleton(ax, x, y, v, color=color,
-                            skeleton=ann.skeleton, skeleton_mask=skeleton_mask, 
-                            alpha=alpha, color_map=color_map, min_w = min_w, fac_col=fac_col, caf_weights=caf_weights)
-        
+                            skeleton=ann.skeleton, skeleton_mask=skeleton_mask,
+                            alpha=alpha, color_map=color_map, min_w=min_w, fac_col=fac_col,
+                            caf_weights=caf_weights)
         for scale in normalized_scales:
             col = color_map(int((scale-min_w)*fac_col))
             colors.append(col)
         if self.show_joint_scales and ann.joint_scales is not None:
             self._draw_scales(ax, x, y, v, colors, ann.joint_scales, alpha=alpha)
-        
         norm = matplotlib.colors.Normalize(vmin=min_w, vmax=max_w)
 
 # =============================================================================
@@ -291,13 +289,15 @@ class KeypointPainter(Configurable):
 #                                         norm=norm,
 #                                 orientation='horizontal'
 # =============================================================================
-        matplotlib.pyplot.colorbar(mappable=matplotlib.cm.ScalarMappable(norm=norm, cmap=color_map),)
+        matplotlib.pyplot.colorbar(mappable=matplotlib.cm.ScalarMappable(norm=norm,
+                                                                         cmap=color_map),)
+
 
 def rotate(pose, angle=45, axis=2):
     sin = np.sin(np.radians(angle))
     cos = np.cos(np.radians(angle))
     pose_copy = np.copy(pose)
-    pose_copy[:, 2] = pose_copy[:, 2] # COOS at human center
+    pose_copy[:, 2] = pose_copy[:, 2]
     if axis==0:
         rot_mat = np.array([[1, 0, 0],
                             [0, cos, -sin],
@@ -316,78 +316,85 @@ def rotate(pose, angle=45, axis=2):
     rotated_pose[:,2] = rotated_pose[:,2] + 4 #assure that all z's are bigger than 1
     return rotated_pose
 
-name = "apollocar"
-
-skel = [(bone[0]-1, bone[1]-1) for bone in CAR_SKELETON] # Python fromat --> start at zero
-kps = CAR_KEYPOINTS
-
-G = nx.Graph()
-
-G.add_nodes_from(range(len(kps)))
-G.add_edges_from(skel)
-
-with open("Edge_weights_train_apollocar.json", 'r') as f:
-    edge_weights = json.load(f)
+if __name__ == '__main__':
+    name = "apollocar"
     
-G_w = nx.Graph()
-G_w.add_nodes_from(range(len(kps)))
-
-for bone_id, bone in enumerate(skel):
-    G_w.add_edge(bone[0], bone[1], euclidean_dist = edge_weights[bone_id])
-    G_w.add_edge(bone[0], bone[1], euclidean_dist_inverse = 1/edge_weights[bone_id])
-
-G_synthetic = nx.Graph()
-G_synthetic.add_nodes_from(range(len(kps)))
-
-for bone_id, bone in enumerate(skel):
-    dist_bone = np.linalg.norm(CAR_POSE[bone[0]]-CAR_POSE[bone[1]])
-    G_synthetic.add_edge(bone[0], bone[1], euclidean_dist = dist_bone)    
-
-w_bt = get_normalized_weights(nx.betweenness_centrality(G))
-w_co = get_normalized_weights(nx.degree_centrality(G))
-w_cl = get_normalized_weights(nx.closeness_centrality(G))
-w_cl_euclid = get_normalized_weights(nx.closeness_centrality(G_w, distance="euclidean_dist"))
-w_harm_cl = get_normalized_weights(nx.harmonic_centrality(G))
-w_harm_cl_euclid = get_normalized_weights(nx.harmonic_centrality(G_w, distance="euclidean_dist"))
-# w_eigenvector_euclid = get_normalized_weights(nx.eigenvector_centrality(G_w, max_iter=1000, tol=1.0e-6, nstart=None, weight="euclidean_dist_inverse"))
-
-w_harm_euclid_radius_1 = get_normalized_weights(harmonic_centrality_local_radius(G_w, radius=1, distance="euclidean_dist"))
-w_harm_euclid_radius_2 = get_normalized_weights(harmonic_centrality_local_radius(G_w, radius=2, distance="euclidean_dist"))
-w_harm_euclid_radius_3 = get_normalized_weights(harmonic_centrality_local_radius(G_w, radius=3, distance="euclidean_dist"))
-
-w_harm_euclid_radius_3_synthetic = get_normalized_weights(harmonic_centrality_local_radius(G_synthetic, radius=3, distance="euclidean_dist"))
-w_harm_cl_euclid_synthetic = get_normalized_weights(nx.harmonic_centrality(G_synthetic, distance="euclidean_dist"))
-
-results = {"keypoints": kps,
-           "centrality_closeness_inverse": inverse_normalize(w_cl),
-           "centrality_closeness_euclid_inverse": inverse_normalize(w_cl_euclid),
-           "centrality_harmonic_inverse": inverse_normalize(w_harm_cl),
-           "centrality_harmonic_euclid_inverse": inverse_normalize(w_harm_cl_euclid),
-           "w_harm_cl_euclid_synthetic": inverse_normalize(w_harm_cl_euclid_synthetic),
-           "w_harm_euclid_radius_1": inverse_normalize(w_harm_euclid_radius_1),
-           "w_harm_euclid_radius_2": inverse_normalize(w_harm_euclid_radius_2),
-           "w_harm_euclid_radius_3": inverse_normalize(w_harm_euclid_radius_3),
-           "w_harm_euclid_radius_3_synthetic": inverse_normalize(w_harm_euclid_radius_3_synthetic)
-           }
-
-rot = rotate(CAR_POSE, angle=-70, axis=1)
-top_view = rotate(rot, angle=25, axis=0)
-
-draw_skeletons(top_view, inverse_normalize(w_harm_cl_euclid), prefix="w_harm_cl_euclid")
-draw_skeletons(top_view, inverse_normalize(w_harm_euclid_radius_3), prefix="w_harm_euclid_radius_3")
-draw_skeletons(top_view, inverse_normalize(w_harm_cl_euclid_synthetic), prefix="w_harm_cl_euclid_synthetic")
-draw_skeletons(top_view, inverse_normalize(w_harm_euclid_radius_3_synthetic), prefix="w_harm_euclid_radius_3_synthetic")
-
-connect_kps = [item for sublist in SKELETON_CONNECT for item in sublist]
-for i in HFLIP_ids:
-    if i not in connect_kps:
-        top_view[i, 2]=0.5
-
-draw_skeletons(top_view, inverse_normalize(w_harm_cl_euclid), prefix="Dotted_w_harm_cl_euclid")
-draw_skeletons(top_view, inverse_normalize(w_harm_euclid_radius_3), prefix="Dotted_w_harm_euclid_radius_3")
-
-with open("Weights_"+name+".json", 'w') as f:
+    skel = [(bone[0]-1, bone[1]-1) for bone in CAR_SKELETON] # Python fromat --> start at zero
+    kps = CAR_KEYPOINTS
+    
+    G = nx.Graph()
+    
+    G.add_nodes_from(range(len(kps)))
+    G.add_edges_from(skel)
+    
+    with open("Edge_weights_train_apollocar.json", 'r') as f:
+        edge_weights = json.load(f)
+    
+    G_w = nx.Graph()
+    G_w.add_nodes_from(range(len(kps)))
+    
+    for bone_id, bone in enumerate(skel):
+        G_w.add_edge(bone[0], bone[1], euclidean_dist = edge_weights[bone_id])
+        G_w.add_edge(bone[0], bone[1], euclidean_dist_inverse = 1/edge_weights[bone_id])
+    
+    G_synthetic = nx.Graph()
+    G_synthetic.add_nodes_from(range(len(kps)))
+    
+    for bone_id, bone in enumerate(skel):
+        dist_bone = np.linalg.norm(CAR_POSE[bone[0]]-CAR_POSE[bone[1]])
+        G_synthetic.add_edge(bone[0], bone[1], euclidean_dist = dist_bone)    
+    
+    w_bt = get_normalized_weights(nx.betweenness_centrality(G))
+    w_co = get_normalized_weights(nx.degree_centrality(G))
+    w_cl = get_normalized_weights(nx.closeness_centrality(G))
+    w_cl_euclid = get_normalized_weights(nx.closeness_centrality(G_w, distance="euclidean_dist"))
+    w_harm_cl = get_normalized_weights(nx.harmonic_centrality(G))
+    w_harm_cl_euclid = get_normalized_weights(nx.harmonic_centrality(G_w, distance="euclidean_dist"))
+    # w_eigenvector_euclid = get_normalized_weights(nx.eigenvector_centrality(G_w, max_iter=1000, tol=1.0e-6, nstart=None, weight="euclidean_dist_inverse"))
+    
+    w_harm_euclid_radius_1 = get_normalized_weights(harmonic_centrality_local_radius(G_w, radius=1, distance="euclidean_dist"))
+    w_harm_euclid_radius_2 = get_normalized_weights(harmonic_centrality_local_radius(G_w, radius=2, distance="euclidean_dist"))
+    w_harm_euclid_radius_3 = get_normalized_weights(harmonic_centrality_local_radius(G_w, radius=3, distance="euclidean_dist"))
+    
+    w_harm_euclid_radius_3_synthetic = get_normalized_weights(harmonic_centrality_local_radius(G_synthetic, radius=3, distance="euclidean_dist"))
+    w_harm_cl_euclid_synthetic = get_normalized_weights(nx.harmonic_centrality(G_synthetic, distance="euclidean_dist"))
+    
+    results = {"keypoints": kps,
+               "centrality_closeness_inverse": inverse_normalize(w_cl),
+               "centrality_closeness_euclid_inverse": inverse_normalize(w_cl_euclid),
+               "centrality_harmonic_inverse": inverse_normalize(w_harm_cl),
+               "centrality_harmonic_euclid_inverse": inverse_normalize(w_harm_cl_euclid),
+               "w_harm_cl_euclid_synthetic": inverse_normalize(w_harm_cl_euclid_synthetic),
+               "w_harm_euclid_radius_1": inverse_normalize(w_harm_euclid_radius_1),
+               "w_harm_euclid_radius_2": inverse_normalize(w_harm_euclid_radius_2),
+               "w_harm_euclid_radius_3": inverse_normalize(w_harm_euclid_radius_3),
+               "w_harm_euclid_radius_3_synthetic": inverse_normalize(w_harm_euclid_radius_3_synthetic)
+               }
+    
+    rot = rotate(CAR_POSE, angle=-70, axis=1)
+    top_view = rotate(rot, angle=25, axis=0)
+    
+    draw_skeletons(top_view, inverse_normalize(w_harm_cl_euclid), prefix="w_harm_cl_euclid")
+    draw_skeletons(top_view, inverse_normalize(w_harm_euclid_radius_3),
+                   prefix="w_harm_euclid_radius_3")
+    draw_skeletons(top_view, inverse_normalize(w_harm_cl_euclid_synthetic),
+                   prefix="w_harm_cl_euclid_synthetic")
+    draw_skeletons(top_view, inverse_normalize(w_harm_euclid_radius_3_synthetic),
+                   prefix="w_harm_euclid_radius_3_synthetic")
+    
+    connect_kps = [item for sublist in SKELETON_CONNECT for item in sublist]
+    for i in HFLIP_ids:
+        if i not in connect_kps:
+            top_view[i, 2] = 0.5
+    
+    draw_skeletons(top_view, inverse_normalize(w_harm_cl_euclid),
+                   prefix="Dotted_w_harm_cl_euclid")
+    draw_skeletons(top_view, inverse_normalize(w_harm_euclid_radius_3),
+                   prefix="Dotted_w_harm_euclid_radius_3")
+    
+    with open("Weights_"+name+".json", 'w') as f:
         json.dump(results, f)
-
-df = pd.read_json("Weights_"+name+".json")
-export_csv = df.to_csv("Weights_"+name+".csv", index = None, header=True)
+    
+    df = pd.read_json("Weights_"+name+".json")
+    export_csv = df.to_csv("Weights_"+name+".csv", index=None, header=True)
+    print("Compututed wights written to: Weights_"+name+".csv")
