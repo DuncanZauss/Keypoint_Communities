@@ -1,20 +1,4 @@
 # Keypoint_Communities
-![example image with overlaid wholebody pose predictions](docs/soccer.jpeg.predictions.jpeg)
-
-Image credit: [Photo](https://de.wikipedia.org/wiki/Kamil_Vacek#/media/Datei:Kamil_Vacek_20200627.jpg) by [Lokomotive74](https://commons.wikimedia.org/wiki/User:Lokomotive74) which is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).<br />
-Created with:
-```sh
-python -m openpifpaf.predict docs/soccer.jpeg --checkpoint=shufflenetv2k30-wholebody --line-width=2 --show
-```
-
-![example image with overlaid wholebody pose predictions](docs/000000081988.jpg.predictions.jpeg)
-
-Image credit: "[Learning to surf](https://www.flickr.com/photos/fotologic/6038911779/in/photostream/)" by fotologic which is licensed under [CC-BY-2.0].<br />
-Created with:
-```sh
-python3 -m openpifpaf.predict docs/000000081988.jpg --checkpoint=shufflenetv2k30-wholebody --line-width=2 --show
-```
-
 In this repository you will find the code to our [paper](TODO):
 > __Keypoint Communities__<br />
 > _[Duncan Zauss](https://www.linkedin.com/in/duncan-zauss/), [Sven Kreiss](https://www.svenkreiss.com), [Alexandre Alahi](https://scholar.google.com/citations?user=UIhXQ64AAAAJ&hl=en)_, 2021.
@@ -34,7 +18,24 @@ In this repository you will find the code to our [paper](TODO):
 > Our experiments show that our method outperforms all previous methods for
 > human pose estimation with fine-grained keypoint annotations on the face, the hands
 > and the feet with a total of 133 keypoints.
-> We show that our method generalizes to car poses with 66 keypoints as well. 
+> We show that our method generalizes to car poses with 66 keypoints as well.
+
+![example image with overlaid wholebody pose predictions](docs/soccer.jpeg.predictions.jpeg)
+
+Image credit: [Photo](https://de.wikipedia.org/wiki/Kamil_Vacek#/media/Datei:Kamil_Vacek_20200627.jpg) by [Lokomotive74](https://commons.wikimedia.org/wiki/User:Lokomotive74) which is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).<br />
+Created with:
+```sh
+python -m openpifpaf.predict docs/soccer.jpeg --checkpoint=shufflenetv2k30-wholebody --line-width=2 --show
+```
+
+![example image with overlaid wholebody pose predictions](docs/000000081988.jpg.predictions.jpeg)
+
+Image credit: "[Learning to surf](https://www.flickr.com/photos/fotologic/6038911779/in/photostream/)" by fotologic which is licensed under [CC-BY-2.0].<br />
+Created with:
+```sh
+python3 -m openpifpaf.predict docs/000000081988.jpg --checkpoint=shufflenetv2k30-wholebody --line-width=2 --show
+```
+ 
 
 ## Installation
 This project is based on [openpifpaf](https://github.com/openpifpaf/openpifpaf). Create a virtual environment with python 3.7, 3.8 or 3.9, clone this repo and then install the required packages:
