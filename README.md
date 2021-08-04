@@ -7,7 +7,7 @@ In this repository you will find the code to our [paper](TODO):
 > learn coarse and fine-grained pose details with a single neural network.
 > Our proposed method leverages insights from community detection in graphs
 > to quantify independence of keypoints.
-> We model the collection of keypoints --pose-- as a graph and use graph centrality measures to assign
+> We model the collection of keypoints pose as a graph and use graph centrality measures to assign
 > training weights to different parts of a pose.
 > For graph centrality, we compute the average length of all shortest paths of a
 > keypoint to all other keypoints
