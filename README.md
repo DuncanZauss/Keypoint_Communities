@@ -1,5 +1,5 @@
 # Keypoint_Communities
-In this repository you will find the code to our [paper](TODO):
+In this repository you will find the code to our [ICCV '21 paper](TODO):
 > __Keypoint Communities__<br />
 > _[Duncan Zauss](https://www.linkedin.com/in/duncan-zauss/), [Sven Kreiss](https://www.svenkreiss.com), [Alexandre Alahi](https://scholar.google.com/citations?user=UIhXQ64AAAAJ&hl=en)_, 2021.
 >
