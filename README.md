@@ -46,20 +46,32 @@ pip install -r requirements.txt
 ```
 
 ## Obtain keypoint weights
-To compute the keypoint weights with our method, download the preprocessed annotations of the [MS COCO WholeBody dataset](https://github.com/jin-s13/COCO-WholeBody) and/or the [ApolloCar3D dataset](http://apolloscape.auto/car_instance.html) in their respective folders with the following commands:
+To compute the keypoint weights with our method, download the preprocessed annotations of the [MS COCO WholeBody dataset](https://github.com/jin-s13/COCO-WholeBody) and/or the [ApolloCar3D dataset](http://apolloscape.auto/car_instance.html) with the following commands:
 ```
-cd Keypoint_Communities/coco_wholebody
+cd Keypoint_Communities/src
+wget https://github.com/DuncanZauss/Keypoint_Communities/releases/download/v0.1.0/person_keypoints_train2017_wholebody_pifpaf_style.json
 wget https://github.com/DuncanZauss/Keypoint_Communities/releases/download/v0.1.0/apollo_keypoints_66_train.json
-cd ../apollocar3d
-wget https://github.com/DuncanZauss/Keypoint_Communities/releases/download/v0.1.0/apollo_keypoints_66_train.json
-cd ..
 ```
-From within the coco_wholebody or the apollocar3d folder the keypoint weights can be computed with the following commands:
+To compute the average euclidean distance in the datasets for every edge run:
 ```
-python Calculate_edge_weights.py
-python Create_weights.py 
+python Compute_edge_weights.py
+```
+To compute training weights with centrality measures as proposed in our paper run the following command:
+```
+python Compute_edge_weights.py
 ```
 You will find the computed weights in the respective csv file and a visualization of the computed weights in the respective docs folder.
+<p float="center">
+  <img src="src/docs_wb/centrality_harmonic_euclid_global_inverse_skeleton_wholebody.png" width="100" />
+  <img src="src/docs_wb/w_harm_euclid_radius_3_skeleton_wholebody.png)" width="100" /> 
+</p>
+
+<p float="center">
+  <img src="src/docs_apollocar/Dotted_w_harm_cl_euclid_skeleton_apollocar.png" width="100" />
+  <img src="src/docs_apollocar/Dotted_w_harm_euclid_radius_3_skeleton_apollocar.png)" width="100" /> 
+</p>
+
+
 
 ## Training
 For training you will need to download the MS COCO dataset and the WholeBody keypoint annotations as explained [here](https://openpifpaf.github.io/plugins_wholebody.html#train).
@@ -71,13 +83,7 @@ python -m openpifpaf.train --dataset=wholebody --lr=0.0001 --momentum=0.95 --b-s
 ## Evaluation
 To evaluate a trained model you can use the following command:
 ```
-python -m openpifpaf.eval --checkpoint=shufflenetv2k30-wholebody --dataset=wholebody --force-complete-pose --seed-threshold=0.2 --batch-size=1
+python -m openpifpaf.eval --dataset=wholebody --checkpoint=shufflenetv2k30-wholebody --force-complete-pose --seed-threshold=0.2 --force-complete-caf-th=0.001  --wholebody-val-annotations=<dataset_path>/coco_wholebody_val_v1.0.json
 ```
-The `shufflenetv2k30-wholebody` is our pretrained model, which will automatically downloaded via torchhub. If you wish to evaluate your own model you can replace it with a local path to your model.
-
-![Global_Centralities_WholeBody](coco_wholebody/docs/centrality_harmonic_euclid_global_inverse_skeleton_wholebody.png)
-![Local_Centralities_WholeBody](coco_wholebody/docs/w_harm_euclid_radius_3_skeleton_wholebody.png)
-
-![Global_Centralities_Apollocar3D](apollocar3d/docs/Dotted_w_harm_cl_euclid_skeleton_apollocar.png)
-![Local_Centralities_Apollocar3D](apollocar3d/docs/Dotted_w_harm_euclid_radius_3_skeleton_apollocar.png)
+The `shufflenetv2k30-wholebody` is our pretrained model, which was trained with the command from the [Training section](https://github.com/DuncanZauss/Keypoint_Communities#training) and will automatically be downloaded via torchhub. If you wish to evaluate your own model you can replace it with a local path to your model.
 
