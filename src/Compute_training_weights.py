@@ -8,6 +8,7 @@ import json
 import pandas as pd
 import os
 
+
 def get_normalized_weights(centrality_measure, kps):
     list_centralities = []
     for i in range(len(kps)):
