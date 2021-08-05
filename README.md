@@ -76,7 +76,7 @@ python -m openpifpaf.train --dataset=wholebody --lr=0.0001 --momentum=0.95 --b-s
 ```
 
 ## Evaluation
-To evaluate a trained model you can use the following command:
+To evaluate a trained model you first need to download the annotation file from [this link](https://drive.google.com/file/d/1N6VgwKnj8DeyGXCvp1eYgNbRmw6jdfrb/view) and than you can use the following command to evaluate a model:
 ```
 python -m openpifpaf.eval --dataset=wholebody --checkpoint=shufflenetv2k30-wholebody --force-complete-pose --seed-threshold=0.2 --force-complete-caf-th=0.001  --wholebody-val-annotations=<dataset_path>/coco_wholebody_val_v1.0.json
 ```
