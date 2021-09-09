@@ -11,7 +11,7 @@ networkx==2.6.2
 numpy==1.21.1
 openpifpaf==0.12.13
 pandas==1.3.1
-Pillow==8.3.1
+pillow>=8.3.2
 pyparsing==2.4.7
 pysparkling==0.6.1
 python-dateutil==2.8.2
