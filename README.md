@@ -1,25 +1,9 @@
 # Keypoint_Communities
-In this repository you will find the code to our [ICCV '21 paper](TODO):
+In this repository you will find the code to our [ICCV '21 paper](https://arxiv.org/abs/2110.00988):
 > __Keypoint Communities__<br />
 > _[Duncan Zauss](https://www.linkedin.com/in/duncan-zauss/), [Sven Kreiss](https://www.svenkreiss.com), [Alexandre Alahi](https://scholar.google.com/citations?user=UIhXQ64AAAAJ&hl=en)_, 2021.
 >
-> We present a generic method to
-> learn coarse and fine-grained pose details with a single neural network.
-> Our proposed method leverages insights from community detection in graphs
-> to quantify independence of keypoints.
-> We model the collection of keypoints pose as a graph and use graph centrality measures to assign
-> training weights to different parts of a pose.
-> For graph centrality, we compute the average length of all shortest paths of a
-> keypoint to all other keypoints
-> to quantify how tightly connected that keypoint is in the pose. We then train with
-> a weighted objective to optimize that all keypoints are equally well connected.
-> For our experiments, we use an off-the-shelf bottom-up pose estimator based
-> on Composite Fields.
-> Our experiments show that our method outperforms all previous methods for
-> human pose estimation with fine-grained keypoint annotations on the face, the hands
-> and the feet with a total of 133 keypoints.
-> We show that our method generalizes to car poses with 66 keypoints as well.
-
+> We present a fast bottom-up method that jointly detects over 100 keypoints on humans or objects, also referred to as human/object pose estimation. We model all keypoints belonging to a human or an object -- the pose -- as a graph and leverage insights from community detection to quantify the independence of keypoints. We use a graph centrality measure to assign training weights to different parts of a pose. Our proposed measure quantifies how tightly a keypoint is connected to its neighborhood. Our experiments show that our method outperforms all previous methods for human pose estimation with fine-grained keypoint annotations on the face, the hands and the feet with a total of 133 keypoints. We also show that our method generalizes to car poses. 
 ![example image with overlaid wholebody pose predictions](docs/soccer.jpeg.predictions.jpeg)
 
 Image credit: [Photo](https://de.wikipedia.org/wiki/Kamil_Vacek#/media/Datei:Kamil_Vacek_20200627.jpg) by [Lokomotive74](https://commons.wikimedia.org/wiki/User:Lokomotive74) which is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).<br />
