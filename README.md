@@ -5,9 +5,18 @@ In this repository you will find the code to our [ICCV '21 paper](https://arxiv.
 >
 > We present a fast bottom-up method that jointly detects over 100 keypoints on humans or objects, also referred to as human/object pose estimation. We model all keypoints belonging to a human or an object -- the pose -- as a graph and leverage insights from community detection to quantify the independence of keypoints. We use a graph centrality measure to assign training weights to different parts of a pose. Our proposed measure quantifies how tightly a keypoint is connected to its neighborhood. Our experiments show that our method outperforms all previous methods for human pose estimation with fine-grained keypoint annotations on the face, the hands and the feet with a total of 133 keypoints. We also show that our method generalizes to car poses. 
 
-### New
-* Integrated to [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See demo: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/akhaliq/Keypoint_Communities)
 
+![example image with overlaid wholebody pose predictions](docs/Hailing_a_cab_Toby_bradbury.jpg.predictions_crop.jpeg.predictions.jpeg)
+
+Image credit: [Photo](https://www.flickr.com/photos/mrlerone/3966487577/in/photolist-73vhyR-M9mY) by Toby Bradbury which is licensed under [CC-BY-2.0](https://creativecommons.org/licenses/by/2.0/).<br />
+
+<img src="docs/demo.gif" alt="drawing" width="1000"/>
+
+Webcam demo. You can try it out yourself with the following command: 
+```sh
+python -m openpifpaf.video --checkpoint=shufflenetv2k16-wholebody --show --long-edge=320
+```
+<br />
 
 ![example image with overlaid wholebody pose predictions](docs/soccer.jpeg.predictions.jpeg)
 
@@ -27,7 +36,7 @@ python3 -m openpifpaf.predict docs/000000081988.jpg --checkpoint=shufflenetv2k30
  
 
 ## Installation
-This project is based on [openpifpaf](https://github.com/openpifpaf/openpifpaf). Create a virtual environment with python 3.7, 3.8 or 3.9, clone this repo and then install the required packages:
+This project is based on [OpenPifPaf](https://github.com/openpifpaf/openpifpaf). Create a virtual environment with python 3.7, 3.8 or 3.9, clone this repo and then install the required packages:
 ```
 git clone https://github.com/DuncanZauss/Keypoint_Communities.git
 cd Keypoint_Communities
@@ -70,4 +79,12 @@ To evaluate a trained model you first need to download the annotation file from 
 python -m openpifpaf.eval --dataset=wholebody --checkpoint=shufflenetv2k30-wholebody --force-complete-pose --seed-threshold=0.2 --force-complete-caf-th=0.001  --wholebody-val-annotations=<dataset_path>/coco_wholebody_val_v1.0.json
 ```
 The `shufflenetv2k30-wholebody` is our pretrained model, which was trained with the command from the [Training section](https://github.com/DuncanZauss/Keypoint_Communities#training) and will automatically be downloaded via torchhub. If you wish to evaluate your own model you can replace it with a local path to your model.
+
+
+## Related projects
+* @AK391 created a great webdemo in [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See demo: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/akhaliq/Keypoint_Communities)
+![Screenshot web interface](docs/screenshot_demo.png)
+
+## License
+The code in this repository is licensed under the MIT license. For more information please refer to the LICENSE file. This project is largely based on [OpenPifPaf](https://github.com/openpifpaf/openpifpaf). OpenPifPaf is licensed under the GNU AGPLv3 license, for more information please refer to [OpenPifPaf's license](https://github.com/openpifpaf/openpifpaf/blob/main/LICENSE).
 
