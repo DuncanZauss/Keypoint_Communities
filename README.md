@@ -60,15 +60,16 @@ python Compute_edge_weights.py
 ```
 To compute training weights with centrality measures as proposed in our paper run the following command:
 ```
-python Compute_edge_weights.py
+python Compute_training_weights.py
 ```
 You will find the computed weights in the respective csv file and a visualization of the computed weights in the respective docs folder.
 <p float="left">
   <img src="src/docs_wb/centrality_harmonic_euclid_global_inverse_skeleton_wholebody.png" width="250" />
   <img src="src/docs_wb/w_harm_euclid_radius_3_skeleton_wholebody.png" width="250" /> 
 </p>
-Visualization of the weights for the WholeBody pose, where take all shortest paths into account (left) and where we only take shortest paths with a radius of three into account (right).
-
+Visualization of the weights for the WholeBody, where we take all shortest paths into account (left) and where we only take the shortest paths with a radius of three into account (right).
+<img src="src/docs_apollocar/Dotted_w_harm_euclid_radius_3_skeleton_apollocar.png" width="500" />
+Visualization of the weights for the car pose, where we only take the shortest paths with a radius of three into account.
 
 ## Training
 For training you will need to download the MS COCO dataset and the WholeBody keypoint annotations as explained [here](https://openpifpaf.github.io/plugins_wholebody.html#train).
