@@ -1,10 +1,14 @@
-# Keypoint_Communities
+# Keypoint Communities
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/keypoint-communities/2d-human-pose-estimation-on-coco-wholebody-1)](https://paperswithcode.com/sota/2d-human-pose-estimation-on-coco-wholebody-1?p=keypoint-communities)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/keypoint-communities/car-pose-estimation-on-apollocar3d)](https://paperswithcode.com/sota/car-pose-estimation-on-apollocar3d?p=keypoint-communities)
+
 In this repository you will find the code to our [ICCV '21 paper](https://arxiv.org/abs/2110.00988):
 > __Keypoint Communities__<br />
 > _[Duncan Zauss](https://www.linkedin.com/in/duncan-zauss/), [Sven Kreiss](https://www.svenkreiss.com), [Alexandre Alahi](https://scholar.google.com/citations?user=UIhXQ64AAAAJ&hl=en)_, 2021.
 >
-> We present a fast bottom-up method that jointly detects over 100 keypoints on humans or objects, also referred to as human/object pose estimation. We model all keypoints belonging to a human or an object -- the pose -- as a graph and leverage insights from community detection to quantify the independence of keypoints. We use a graph centrality measure to assign training weights to different parts of a pose. Our proposed measure quantifies how tightly a keypoint is connected to its neighborhood. Our experiments show that our method outperforms all previous methods for human pose estimation with fine-grained keypoint annotations on the face, the hands and the feet with a total of 133 keypoints. We also show that our method generalizes to car poses. 
+> We present a fast bottom-up method that jointly detects over 100 keypoints on humans or objects, also referred to as human/object pose estimation. We model all keypoints belonging to a human or an object -the pose- as a graph and leverage insights from community detection to quantify the independence of keypoints. We use a graph centrality measure to assign training weights to different parts of a pose. Our proposed measure quantifies how tightly a keypoint is connected to its neighborhood. Our experiments show that our method outperforms all previous methods for human pose estimation with fine-grained keypoint annotations on the face, the hands and the feet with a total of 133 keypoints. We also show that our method generalizes to car poses. 
 
+## Qualitative results
 
 ![example image with overlaid wholebody pose predictions](docs/Hailing_a_cab_Toby_bradbury.jpg.predictions_crop.jpeg.predictions.jpeg)
 
@@ -84,6 +88,19 @@ The `shufflenetv2k30-wholebody` is our pretrained model, which was trained with 
 ## Related projects
 * [AK391](https://github.com/AK391) created a great webdemo in [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See demo: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/akhaliq/Keypoint_Communities)
 ![Screenshot web interface](docs/screenshot_demo.png)
+
+## Citation
+If you find our research useful please cite us:
+```
+@misc{zauss2021keypoint,
+      title={Keypoint Communities}, 
+      author={Duncan Zauss and Sven Kreiss and Alexandre Alahi},
+      year={2021},
+      eprint={2110.00988},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
+```
 
 ## License
 The code in this repository is licensed under the MIT license. For more information please refer to the LICENSE file. This project is largely based on [OpenPifPaf](https://github.com/openpifpaf/openpifpaf). OpenPifPaf is licensed under the GNU AGPLv3 license, for more information please refer to [OpenPifPaf's license](https://github.com/openpifpaf/openpifpaf/blob/main/LICENSE).
