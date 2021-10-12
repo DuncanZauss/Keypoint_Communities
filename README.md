@@ -2,7 +2,7 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/keypoint-communities/2d-human-pose-estimation-on-coco-wholebody-1)](https://paperswithcode.com/sota/2d-human-pose-estimation-on-coco-wholebody-1?p=keypoint-communities)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/keypoint-communities/car-pose-estimation-on-apollocar3d)](https://paperswithcode.com/sota/car-pose-estimation-on-apollocar3d?p=keypoint-communities)
 
-In this repository you will find the code to our [ICCV '21 paper](https://arxiv.org/abs/2110.00988):
+In this repository you will find the code to our [ICCV '21 paper](https://openaccess.thecvf.com/content/ICCV2021/html/Zauss_Keypoint_Communities_ICCV_2021_paper.html):
 > __Keypoint Communities__<br />
 > _[Duncan Zauss](https://www.linkedin.com/in/duncan-zauss/), [Sven Kreiss](https://www.svenkreiss.com), [Alexandre Alahi](https://scholar.google.com/citations?user=UIhXQ64AAAAJ&hl=en)_, 2021.
 >
@@ -13,6 +13,10 @@ In this repository you will find the code to our [ICCV '21 paper](https://arxiv.
 ![example image with overlaid wholebody pose predictions](docs/Hailing_a_cab_Toby_bradbury.jpg.predictions_crop.jpeg.predictions.jpeg)
 
 Image credit: [Photo](https://www.flickr.com/photos/mrlerone/3966487577/in/photolist-73vhyR-M9mY) by Toby Bradbury which is licensed under [CC-BY-2.0](https://creativecommons.org/licenses/by/2.0/).<br />
+
+<img src="docs/demo_NYC.gif" alt="drawing" width="1000"/>
+
+Demo of a short [video](https://www.youtube.com/watch?v=0iKFgEPOk20) that we have processed with our human pose estimation network and the car pose estimation network.
 
 <img src="docs/demo.gif" alt="drawing" width="1000"/>
 
@@ -38,6 +42,13 @@ Created with:
 python3 -m openpifpaf.predict docs/000000081988.jpg --checkpoint=shufflenetv2k30-wholebody --line-width=2 --show
 ```
  
+![Example image from the ApolloCar3D dataset](docs/180310_022316798_Camera_5.jpg.predictions.jpeg)
+
+Example prediction on one of the validation images \(180310\_022316798\_Camera\_5.jpg\) of the [ApolloCar3D dataset](http://apolloscape.auto/car_instance.html).
+Created with:
+```sh
+python -m openpifpaf.predict <Path/To/The/ApolloCar3D/Images>/180310_022316798_Camera_5.jpg --checkpoint=shufflenetv2k30-apollo-66 --image-dpi-factor=0.25 --line-width=2 --caf-th=0.2 --seed-threshold=0.2 --show
+```
 
 ## Installation
 This project is based on [OpenPifPaf](https://github.com/openpifpaf/openpifpaf). Create a virtual environment with python 3.7, 3.8 or 3.9, clone this repo and then install the required packages:
@@ -83,23 +94,32 @@ To evaluate a trained model you first need to download the annotation file from 
 ```
 python -m openpifpaf.eval --dataset=wholebody --checkpoint=shufflenetv2k30-wholebody --force-complete-pose --seed-threshold=0.2 --force-complete-caf-th=0.001  --wholebody-val-annotations=<dataset_path>/coco_wholebody_val_v1.0.json
 ```
-The `shufflenetv2k30-wholebody` is our pretrained model, which was trained with the command from the [Training section](https://github.com/DuncanZauss/Keypoint_Communities#training) and will automatically be downloaded via torchhub. If you wish to evaluate your own model you can replace it with a local path to your model.
+The command should return you the following metrics:
+|                   |  WB  | body | foot | face | hand |
+|-------------------|:----:|:----:|:----:|:----:|:----:|
+| AP                | **60.4** | **69.6** | **63.4** | **85.0** | **52.9** |
+| AP<sup>0.5</sup>  | 85.5 | 88.1 | 80.0 | 95.4 | 78.5 |
+| AP<sup>0.75</sup> | 66.2 | 76.1 | 68.0 | 89.2 | 57.7 |
+| AP<sup>M</sup>    | 47.4 | 57.7 | 46.0 | 57.4 | 18.0 |
+| AP<sup>L</sup>    | 67.8 | 77.5 | 71.4 | 92.4 | 57.0 |
 
+Additionally the runtime for the network and decoder is shown. For our setup \(GPU: NVIDIA GTX 1080Ti, CPU: Intel i7-8700\) the neural network runs in 93ms and the decoder runs in 60ms. Additional decoder settings for different precision/inference time trade-offs are shown in table 4 of our [paper](https://openaccess.thecvf.com/content/ICCV2021/html/Zauss_Keypoint_Communities_ICCV_2021_paper.html).
+
+The `shufflenetv2k30-wholebody` is our pretrained model, which was trained with the command from the [Training section](https://github.com/DuncanZauss/Keypoint_Communities#training) and will automatically be downloaded via torchhub. If you wish to evaluate your own model you can replace it with a local path to your model.
 
 ## Related projects
 * [AK391](https://github.com/AK391) created a great webdemo in [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See demo: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/akhaliq/Keypoint_Communities)
 ![Screenshot web interface](docs/screenshot_demo.png)
 
 ## Citation
-If you find our research useful please cite us:
+If you find our research useful we would be happy if you cite us:
 ```
-@misc{zauss2021keypoint,
-      title={Keypoint Communities}, 
-      author={Duncan Zauss and Sven Kreiss and Alexandre Alahi},
-      year={2021},
-      eprint={2110.00988},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@inproceedings{zauss2021keypoint,
+  title={Keypoint Communities},
+  author={Zauss, Duncan and Kreiss, Sven and Alahi, Alexandre},
+  booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
+  pages={11057--11066},
+  year={2021}
 }
 ```
 
