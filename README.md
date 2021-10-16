@@ -22,8 +22,9 @@ Demo of a short [video](https://www.youtube.com/watch?v=0iKFgEPOk20) that we hav
 
 Webcam demo. You can try it out yourself with the following command: 
 ```sh
-python -m openpifpaf.video --checkpoint=shufflenetv2k16-wholebody --show --long-edge=320
+python -m openpifpaf.video --source=0 --checkpoint=shufflenetv2k16-wholebody --long-edge=321 --horizontal-flip --show
 ```
+You can replace ```--source=0``` with ```--source=<PathToMyVideo>/videofile.mp4``` if you wish to process a video file instead of using your webcam.
 <br />
 
 ![example image with overlaid wholebody pose predictions](docs/soccer.jpeg.predictions.jpeg)
